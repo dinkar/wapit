@@ -75,11 +75,67 @@ module.exports = function (grunt) {
         hostname: 'localhost',
         livereload: 35729
       },
+      proxies: [{
+        context: '/checkUser',
+        host: 'mapit-wingify.herokuapp.com',
+        https: false,
+        changeOrigin: true,
+        headers: {
+          host: 'mapit-wingify.herokuapp.com'
+        }
+      }, {
+        context: '/newUser',
+        host: 'mapit-wingify.herokuapp.com',
+        https: false,
+        changeOrigin: true,
+        headers: {
+          host: 'mapit-wingify.herokuapp.com'
+        }
+      }, {
+        context: '/updateRange',
+        host: 'mapit-wingify.herokuapp.com',
+        https: false,
+        changeOrigin: true,
+        headers: {
+          host: 'mapit-wingify.herokuapp.com'
+        }
+      }, {
+        context: '/updateLocation',
+        host: 'mapit-wingify.herokuapp.com',
+        https: false,
+        changeOrigin: true,
+        headers: {
+          host: 'mapit-wingify.herokuapp.com'
+        }
+      }],
       livereload: {
         options: {
           open: true,
-          middleware: function (connect) {
+          middleware: function (connect, options) {
+
+            if (!Array.isArray(options.base)) {
+              options.base = [options.base];
+            }
+
+            // Setup the proxy
+            // var middlewares = [require('grunt-connect-proxy/lib/utils').proxyRequest];
+            //
+            // // Serve static files.
+            // options.base.forEach(function (base) {
+            //   middlewares.push(connect.static(base));
+            // });
+            //
+            // // Make directory browse-able.
+            // var directory = options.directory || options.base[options.base.length - 1];
+            // middlewares.push(connect.directory(directory));
+            //
+            // return middlewares;
+
+            // Setup the proxy
+            var proxySnippet = [require('grunt-connect-proxy/lib/utils').proxyRequest];
+
             return [
+              proxySnippet,
               connect.static('.tmp'),
               connect().use(
                 '/bower_components',
@@ -174,7 +230,9 @@ module.exports = function (grunt) {
     postcss: {
       options: {
         processors: [
-          require('autoprefixer-core')({browsers: ['last 1 version']})
+          require('autoprefixer-core')({
+            browsers: ['last 1 version']
+          })
         ]
       },
       server: {
@@ -202,29 +260,29 @@ module.exports = function (grunt) {
     wiredep: {
       app: {
         src: ['<%= yeoman.app %>/index.html'],
-        ignorePath:  /\.\.\//
+        ignorePath: /\.\.\//
       },
       test: {
         devDependencies: true,
         src: '<%= karma.unit.configFile %>',
-        ignorePath:  /\.\.\//,
-        fileTypes:{
+        ignorePath: /\.\.\//,
+        fileTypes: {
           js: {
             block: /(([\s\t]*)\/{2}\s*?bower:\s*?(\S*))(\n|\r|.)*?(\/{2}\s*endbower)/gi,
-              detect: {
-                js: /'(.*\.js)'/gi
-              },
-              replace: {
-                js: '\'{{filePath}}\','
-              }
+            detect: {
+              js: /'(.*\.js)'/gi
+            },
+            replace: {
+              js: '\'{{filePath}}\','
             }
           }
+        }
       },
       sass: {
         src: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
         ignorePath: /(\.\.\/){1,2}bower_components\//
       }
-    }, 
+    },
 
     // Compiles Sass to CSS and generates necessary files if requested
     compass: {
@@ -298,7 +356,9 @@ module.exports = function (grunt) {
           '<%= yeoman.dist %>/styles'
         ],
         patterns: {
-          js: [[/(images\/[^''""]*\.(png|jpg|jpeg|gif|webp|svg))/g, 'Replacing references to images']]
+          js: [
+            [/(images\/[^''""]*\.(png|jpg|jpeg|gif|webp|svg))/g, 'Replacing references to images']
+          ]
         }
       }
     },
@@ -459,6 +519,7 @@ module.exports = function (grunt) {
     }
   });
 
+  grunt.loadNpmTasks('grunt-connect-proxy');
 
   grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
     if (target === 'dist') {
@@ -470,6 +531,7 @@ module.exports = function (grunt) {
       'wiredep',
       'concurrent:server',
       'postcss:server',
+      'configureProxies',
       'connect:livereload',
       'watch'
     ]);
