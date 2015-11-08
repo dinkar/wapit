@@ -34,6 +34,11 @@
     "karma-phantomjs-launcher": "*",
     "time-grunt": "^1.0.0"
   },
+  "dependencies": {
+    "bower": "^1.6.5",
+    "ejs": "2.3.3",
+    "express": "4.13.3"
+  },
   "engines": {
     "node": ">=0.10.0"
   },
