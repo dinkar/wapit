@@ -37,12 +37,15 @@
   "dependencies": {
     "bower": "^1.6.5",
     "ejs": "2.3.3",
-    "express": "4.13.3"
+    "express": "4.13.3",
+    "gzippo": "^0.2.0",
+    "morgan": "^1.6.1"
   },
   "engines": {
     "node": ">=0.10.0"
   },
   "scripts": {
     "test": "grunt test"
-  }
+  },
+  "postinstall": "./node_modules/bower/bin/bower install"
 }
