@@ -16,7 +16,7 @@ angular.module('wapitApp')
 
     $scope.$watchGroup(['geoCoordinates.coords', 'markerCoordinates.coords'], function (n, o) {
       if (n[0] && n[1] && !isLocationSame(n[0], n[1])) {
-        $scope.focusNeeded = true;
+        $scope.focusNeeded = false;
       } else {
         $scope.focusNeeded = false;
       }
