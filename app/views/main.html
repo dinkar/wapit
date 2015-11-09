@@ -1,8 +1,21 @@
 <style>
-  .angular-google-map-container { height: 400px;}
+  .angular-google-map-container {
+    height: 400px;
+  }
 </style>
 <script type="text/ng-template" id="focuscontrol.tpl.html">
   <button class="btn btn-sm btn-primary" ng-show="focusNeeded" ng-click="focusToCenter()">+</button>
+</script>
+<script type="text/ng-template" id="myModalContent.tpl.html">
+  <div class="modal-header">
+    <h3 class="modal-title">Not subscribed yet.</h3>
+  </div>
+  <div class="modal-body">
+    Hi, we've noticed that you aren't subscribed yet. Please choose ALLOW in the next message to subscribe.
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+  </div>
 </script>
 <ui-gmap-google-map center='map.center' zoom='map.zoom' options='map.options'>
   <ui-gmap-marker idkey='marker.id' coords='marker.coords' options='marker.options' events='marker.events'></ui-gmap-marker>

@@ -9,7 +9,7 @@
  */
 angular.module('wapitApp')
   .controller('MainCtrl', function ($scope, uiGmapGoogleMapApi, uiGmapIsReady,
-    $timeout, $log, $window, $http, userService, $q, mapService) {
+    $timeout, $log, $window, $http, userService, $q, mapService, $uibModal) {
 
     var defaultRange = 10;
     var map;
@@ -45,6 +45,14 @@ angular.module('wapitApp')
     };
     $scope.mapStatus = 'Loading map.';
     $scope.pcStatus = 'Getting push crew status';
+
+    function open() {
+      var modalInstance = $uibModal.open({
+        animation: true,
+        templateUrl: 'myModalContent.tpl.html',
+        controller: 'MapitmodalCtrl'
+      });
+    };
 
     function pushCrewAPIReady() {
       $timeout(function () {
@@ -95,6 +103,7 @@ angular.module('wapitApp')
           }
         } else {
           $scope.pcStatus = 'User isn\'t a subscriber';
+          open();
         }
       }, 0);
     }
@@ -126,9 +135,9 @@ angular.module('wapitApp')
 
     function updateBackendCoordinates() {
       $scope.marker.options.labelContent = 'Updating the location...'
-      userService.updateLocation($window.pushcrew.subscriberId, $scope.marker.coords.latitude, $scope.marker.coords.longitude).then(function(){
+      userService.updateLocation($window.pushcrew.subscriberId, $scope.marker.coords.latitude, $scope.marker.coords.longitude).then(function () {
         $scope.marker.options.labelContent = 'Location successfully updated.';
-        $timeout(function(){
+        $timeout(function () {
           $scope.marker.options.labelContent = 'Drag this to set your location.';
         }, 3000);
       });
