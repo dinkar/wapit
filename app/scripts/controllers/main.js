@@ -19,6 +19,9 @@ angular.module('wapitApp')
         latitude: 45,
         longitude: -73
       },
+      options: {
+        scrollwheel: false
+      },
       zoom: 8
     };
     $scope.map = defaultMapOptions;
@@ -125,5 +128,9 @@ angular.module('wapitApp')
     //Init
     $window._pcq = $window._pcq || [];
     $window._pcq.push(['APIReady', pushCrewAPIReady]);
+    $window._pcq.push(['subscriptionSuccessCallback',pushCrewAPIReady]);
     getUserLocation();
+    uiGmapGoogleMapApi.then(function(mapObj) {
+      $scope.mapStatus = 'Map loaded.';
+    });
   });

@@ -1,12 +1,10 @@
 <style>
-  .angular-google-map-container { height: 400px; }
+  .angular-google-map-container { height: 400px;}
 </style>
 <script type="text/ng-template" id="focuscontrol.tpl.html">
   <button class="btn btn-sm btn-primary" ng-show="focusNeeded" ng-click="focusToCenter()">+</button>
 </script>
-<ui-gmap-google-map center='map.center' zoom='map.zoom'>
+<ui-gmap-google-map center='map.center' zoom='map.zoom' options='map.options'>
   <ui-gmap-marker idkey='marker.id' coords='marker.coords' options='marker.options' events='marker.events'></ui-gmap-marker>
   <ui-gmap-map-control template="focuscontrol.tpl.html" index="1" position="bottom-right" controller="FocusCtrl"></ui-gmap-map-control>
 </ui-gmap-google-map>
-<div>{{mapStatus}}</div>
-<div>{{pcStatus}}</div>

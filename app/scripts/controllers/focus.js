@@ -13,7 +13,6 @@ angular.module('wapitApp')
     $scope.geoCoordinates = mapService.coords.geoCoordinates;
     $scope.markerCoordinates = mapService.coords.markerCoordinates;
     $scope.focusNeeded = false;
-    console.log($scope);
 
     $scope.$watchGroup(['geoCoordinates.coords', 'markerCoordinates.coords'], function (n, o) {
       if (n[0] && n[1] && !isLocationSame(n[0], n[1])) {
