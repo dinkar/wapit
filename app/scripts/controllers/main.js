@@ -9,7 +9,7 @@
  */
 angular.module('wapitApp')
   .controller('MainCtrl', function ($scope, uiGmapGoogleMapApi, uiGmapIsReady,
-      $timeout, $log, $window, $http, userService, $q, mapService) {
+    $timeout, $log, $window, $http, userService, $q, mapService) {
 
     var defaultRange = 10;
     var map;
@@ -32,7 +32,10 @@ angular.module('wapitApp')
         longitude: -73
       },
       options: {
-        draggable: true
+        draggable: true,
+        labelClass: 'marker-labels',
+        labelAnchor: '100 0',
+        labelContent: 'Drag this to set your location.'
       },
       events: {
         dragend: function (marker, eventName, args) {
@@ -50,14 +53,14 @@ angular.module('wapitApp')
             $scope.pcStatus = 'Subscriber has blocked push notifications.';
           } else {
             $scope.pcStatus = 'Subscriber ID is ' + $window.pushcrew.subscriberId;
-            userService.checkUser($window.pushcrew.subscriberId).then(function(userDetails){
-              switch(userDetails.data.status) {
-                case 'error' :
+            userService.checkUser($window.pushcrew.subscriberId).then(function (userDetails) {
+              switch (userDetails.data.status) {
+                case 'error':
                   $scope.pcStatus = 'There was an error while creating user.';
                   break;
-                case 'new_user' :
-                  locationDefer.promise.then(function(locationCoords){
-                    uiGmapGoogleMapApi.then(function(mapObj){
+                case 'new_user':
+                  locationDefer.promise.then(function (locationCoords) {
+                    uiGmapGoogleMapApi.then(function (mapObj) {
                       $timeout(function () {
                         map = mapObj;
                         $scope.mapStatus = 'Location set. Drag the marker to set new center.';
@@ -73,15 +76,15 @@ angular.module('wapitApp')
                   });
                   break;
                 case 'existing_user':
-                  uiGmapGoogleMapApi.then(function(mapObj) {
-                    $timeout( function() {
+                  uiGmapGoogleMapApi.then(function (mapObj) {
+                    $timeout(function () {
                       map = mapObj;
                       $scope.mapStatus = 'Location set. Drag the marker to set new center.';
                       $scope.map.center.latitude = userDetails.data.data[0].lat;
                       $scope.map.center.longitude = userDetails.data.data[0].lng;
                       $scope.marker.coords.latitude = userDetails.data.data[0].lat;
                       $scope.marker.coords.longitude = userDetails.data.data[0].lng;
-                      locationDefer.promise.then(function(locationCoords) {
+                      locationDefer.promise.then(function (locationCoords) {
                         mapService.coords.geoCoordinates = locationCoords;
                         mapService.coords.markerCoordinates = $scope.marker;
                       });
@@ -122,15 +125,21 @@ angular.module('wapitApp')
     }
 
     function updateBackendCoordinates() {
-      userService.updateLocation($window.pushcrew.subscriberId, $scope.marker.coords.latitude, $scope.marker.coords.longitude);
+      $scope.marker.options.labelContent = 'Updating the location...'
+      userService.updateLocation($window.pushcrew.subscriberId, $scope.marker.coords.latitude, $scope.marker.coords.longitude).then(function(){
+        $scope.marker.options.labelContent = 'Location successfully updated.';
+        $timeout(function(){
+          $scope.marker.options.labelContent = 'Drag this to set your location.';
+        }, 3000);
+      });
     }
 
     //Init
     $window._pcq = $window._pcq || [];
     $window._pcq.push(['APIReady', pushCrewAPIReady]);
-    $window._pcq.push(['subscriptionSuccessCallback',pushCrewAPIReady]);
+    $window._pcq.push(['subscriptionSuccessCallback', pushCrewAPIReady]);
     getUserLocation();
-    uiGmapGoogleMapApi.then(function(mapObj) {
+    uiGmapGoogleMapApi.then(function (mapObj) {
       $scope.mapStatus = 'Map loaded.';
     });
   });

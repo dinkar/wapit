@@ -238,7 +238,7 @@ a:focus {
     height: auto;
     padding: 100px 0;
     text-align: center;
-    color: rgb(86,86,86);
+    color: rgba(51, 122, 183, 0.84);
     background: url(../images/intro-bg-2.jpg) no-repeat bottom center scroll;
     background-color: #000;
     -webkit-background-size: cover;
@@ -462,4 +462,10 @@ img::-moz-selection {
 
 body {
     webkit-tap-highlight-color: rgba(255,255,255,.2);
+}
+
+.marker-labels{
+  font-weight: bold;
+  font-size: 15px;
+  color: rgba(51, 122, 183, 0.84);
 }
